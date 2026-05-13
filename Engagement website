@@ -38,7 +38,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('YOUR_GOOGLE_DRIVE_HERO_LINK') center/cover no-repeat;
+            background: url('https://drive.google.com/file/d/1xE4yaF11ont0pPgPcb_85d_ZHZOZQVQW/view?usp=sharing') center/cover no-repeat;
             z-index: -1;
             /* Animation: Fades out as you scroll down */
             animation: fadeOut linear;
@@ -222,7 +222,7 @@
     <!-- Family Section -->
     <section id="family">
         <h2 style="font-family: 'Playfair Display';">The Families</h2>
-        <p>Grateful for the love and blessings of the [Last Name] and [Last Name] Families.</p>
+        <p>Grateful for the love and blessings of the Raj and Srivastava Families.</p>
         <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
             <div><h3>Team Bride</h3><p>Names of family members...</p></div>
             <div><h3>Team Groom</h3><p>Names of family members...</p></div>
@@ -235,8 +235,8 @@
         <div class="card-preview">
             <h3 style="color: var(--gold);">Komal & Amol</h3>
             <p>Invite you to join their wedding celebration</p>
-            <p><strong>April 20, 2026</strong></p>
-            <p>Hotel Kavana, Varanasi</p>
+            <p><strong>December 3, 2026</strong></p>
+            <p>First Impressions Resort , Varanasi</p>
         </div>
     </section>
 
@@ -253,21 +253,21 @@
             </div>
     
             <!-- 10 Pictures as Pages -->
-            <div class="magazine-page"><img src="DRIVE_LINK_1" alt="Page 1"></div>
-            <div class="magazine-page"><img src="DRIVE_LINK_2" alt="Page 2"></div>
-            <div class="magazine-page"><img src="DRIVE_LINK_3" alt="Page 3"></div>
-            <div class="magazine-page"><img src="DRIVE_LINK_4" alt="Page 4"></div>
-            <div class="magazine-page"><img src="DRIVE_LINK_5" alt="Page 5"></div>
-            <div class="magazine-page"><img src="DRIVE_LINK_6" alt="Page 6"></div>
-            <div class="magazine-page"><img src="DRIVE_LINK_7" alt="Page 7"></div>
-            <div class="magazine-page"><img src="DRIVE_LINK_8" alt="Page 8"></div>
-            <div class="magazine-page"><img src="DRIVE_LINK_9" alt="Page 9"></div>
-            <div class="magazine-page"><img src="DRIVE_LINK_10" alt="Page 10"></div>
+            <div class="magazine-page"><img src="https://drive.google.com/file/d/1QZ0Bm02dNqj2JOSn9LgagicApeWP09Yc/view?usp=sharing" alt="Page 1"></div>
+            <div class="magazine-page"><img src="https://drive.google.com/file/d/10TCvtN-Xup5KeIErcvxMtsXZT2qwnArO/view?usp=sharing" alt="Page 2"></div>
+            <div class="magazine-page"><img src="https://drive.google.com/file/d/1pji04p4LGtSyT9cF62ocqtO6Koy80kvw/view?usp=sharing" alt="Page 3"></div>
+            <div class="magazine-page"><img src="https://drive.google.com/file/d/17J5i3tky8Bn8tap_AjCjbAXvP5oJ5jgQ/view?usp=sharing" alt="Page 4"></div>
+            <div class="magazine-page"><img src="https://drive.google.com/file/d/1UWnRGeoyxZKMmgCLsdKHxvaGhHfVpBH3/view?usp=sharing" alt="Page 5"></div>
+            <div class="magazine-page"><img src="https://drive.google.com/file/d/1yV0nIKIG8bu0-ZIDLYwxGfzgPIFesSvD/view?usp=sharing" alt="Page 6"></div>
+            <div class="magazine-page"><img src="https://drive.google.com/file/d/1ts4snN7q6gmz9rMdD0aS0YtqKm6CdSP3/view?usp=sharing" alt="Page 7"></div>
+            <div class="magazine-page"><img src="https://drive.google.com/file/d/144wLvBXjbt-Er3C3XE5JT79inIy26WyZ/view?usp=sharing" alt="Page 8"></div>
+            <div class="magazine-page"><img src="https://drive.google.com/file/d/1-YWsCOLTSsu2SIgfbjqLFoe-ulCV72aJ/view?usp=sharing" alt="Page 9"></div>
+            <div class="magazine-page"><img src="https://drive.google.com/file/d/1uC--m7YWIh87tMGgDxj650DjmnA0sJxY/view?usp=sharing" alt="Page 10"></div>
         </div>
     </div>
     <script>
         // --- COUNTDOWN LOGIC ---
-        const weddingDate = new Date("April 20, 2026 00:00:00").getTime();
+        const weddingDate = new Date("December 3, 2026 00:00:00").getTime();
 
         function updateCountdown() {
             const now = new Date().getTime();
