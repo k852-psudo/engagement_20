@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Komal & Amol | The Engagement Glimpse</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,700&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #c5a059;
+            --dark: #1a1a1a;
+            --cream: #fdfbf7;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--cream);
+            color: var(--dark);
+            scroll-behavior: smooth;
+        }
+
+        /* --- HERO SECTION WITH FADE EFFECT --- */
+        .hero {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .hero-img {
+            position: fixed; /* Keeps it in place for the fade */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('YOUR_GOOGLE_DRIVE_HERO_LINK') center/cover no-repeat;
+            z-index: -1;
+            /* Animation: Fades out as you scroll down */
+            animation: fadeOut linear;
+            animation-timeline: scroll();
+            animation-range: exit;
+        }
+
+        @keyframes fadeOut {
+            to { opacity: 0; transform: scale(1.1); }
+        }
+
+        .hero-text {
+            text-align: center;
+            color: white;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .hero-text h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            margin: 0;
+        }
+
+        /* --- MAIN CONTENT SECTIONS --- */
+        section {
+            padding: 80px 20px;
+            max-width: 1000px;
+            margin: auto;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        /* Reveals sections on scroll */
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- COUNTDOWN --- */
+        #countdown {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 1.5rem;
+            margin-top: 20px;
+        }
+
+        .count-box {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            min-width: 80px;
+        }
+
+        /* --- MAGAZINE INTERFACE --- */
+        .magazine-btn {
+            background: var(--gold);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 40px;
+        }
+
+        .magazine-btn:hover { background: #b08d4a; }
+
+        #magazine-view {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--cream);
+            z-index: 100;
+            overflow-y: auto;
+        }
+
+        .magazine-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            padding: 20px;
+        }
+
+        .magazine-grid img {
+            width: 100%;
+            height: 450px;
+            object-fit: cover;
+            border: 10px solid white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* --- INVITATION CARD --- */
+        .card-preview {
+            background: white;
+            padding: 40px;
+            border: 2px solid var(--gold);
+            max-width: 500px;
+            margin: 40px auto;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .close-mag {
+            position: sticky;
+            top: 20px;
+            left: 20px;
+            background: var(--dark);
+            color: white;
+            padding: 10px 20px;
+            cursor: pointer;
+            z-index: 101;
+        }
+        .magazine-container {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory; /* This forces the "swipe" to snap to each page */
+            height: 100vh;
+            background: #fff;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .magazine-page {
+            min-width: 100vw;
+            height: 100vh;
+            scroll-snap-align: start; /* Ensures page aligns perfectly after swipe */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .magazine-page img {
+            max-width: 90%;
+            max-height: 80vh;
+            object-fit: contain;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 15px solid white; /* Magazine border look */
+        }
+        
+        .magazine-page.cover {
+            background: var(--cream);
+            text-align: center;
+        }
+        
+        /* Hide the scrollbar for a clean magazine look */
+        .magazine-container::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <div class="hero-img"></div>
+        <div class="hero-text">
+            <p>A GLIMPSE OF OUR ENGAGEMENT</p>
+            <h1>Komal & Amol</h1>
+            <p>Varanasi | April 20</p>
+        </div>
+    </div>
+
+    <!-- Countdown & Magazine Trigger -->
+    <section id="welcome">
+        <h2 style="font-family: 'Playfair Display'; font-size: 2.5rem;">Counting Down to the Big Day</h2>
+        <div id="countdown">
+            <div class="count-box"><span id="days">00</span><br><small>Days</small></div>
+            <div class="count-box"><span id="hours">00</span><br><small>Hrs</small></div>
+            <div class="count-box"><span id="mins">00</span><br><small>Mins</small></div>
+        </div>
+        <button class="magazine-btn" onclick="openMagazine()">Open Engagement Magazine</button>
+    </section>
+
+    <!-- Family Section -->
+    <section id="family">
+        <h2 style="font-family: 'Playfair Display';">The Families</h2>
+        <p>Grateful for the love and blessings of the [Last Name] and [Last Name] Families.</p>
+        <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
+            <div><h3>Team Bride</h3><p>Names of family members...</p></div>
+            <div><h3>Team Groom</h3><p>Names of family members...</p></div>
+        </div>
+    </section>
+
+    <!-- Invitation Card Section -->
+    <section id="invitation">
+        <h2 style="font-family: 'Playfair Display';">The Invitation</h2>
+        <div class="card-preview">
+            <h3 style="color: var(--gold);">Komal & Amol</h3>
+            <p>Invite you to join their wedding celebration</p>
+            <p><strong>April 20, 2026</strong></p>
+            <p>Hotel Kavana, Varanasi</p>
+        </div>
+    </section>
+
+    <!-- Magazine Hidden View with Horizontal Swipe -->
+    <div id="magazine-view">
+        <button class="close-mag" onclick="closeMagazine()">← Back to Main</button>
+        
+        <div class="magazine-container">
+            <!-- Cover Page -->
+            <div class="magazine-page cover">
+                <h1 style="font-family: 'Playfair Display';">THE ENGAGEMENT ISSUE</h1>
+                <p>Komal & Amol | April 2026</p>
+                <small>Swipe to flip →</small>
+            </div>
+    
+            <!-- 10 Pictures as Pages -->
+            <div class="magazine-page"><img src="DRIVE_LINK_1" alt="Page 1"></div>
+            <div class="magazine-page"><img src="DRIVE_LINK_2" alt="Page 2"></div>
+            <div class="magazine-page"><img src="DRIVE_LINK_3" alt="Page 3"></div>
+            <div class="magazine-page"><img src="DRIVE_LINK_4" alt="Page 4"></div>
+            <div class="magazine-page"><img src="DRIVE_LINK_5" alt="Page 5"></div>
+            <div class="magazine-page"><img src="DRIVE_LINK_6" alt="Page 6"></div>
+            <div class="magazine-page"><img src="DRIVE_LINK_7" alt="Page 7"></div>
+            <div class="magazine-page"><img src="DRIVE_LINK_8" alt="Page 8"></div>
+            <div class="magazine-page"><img src="DRIVE_LINK_9" alt="Page 9"></div>
+            <div class="magazine-page"><img src="DRIVE_LINK_10" alt="Page 10"></div>
+        </div>
+    </div>
+    <script>
+        // --- COUNTDOWN LOGIC ---
+        const weddingDate = new Date("April 20, 2026 00:00:00").getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const gap = weddingDate - now;
+
+            const second = 1000;
+            const minute = second * 60;
+            const hour = minute * 60;
+            const day = hour * 24;
+
+            document.getElementById("days").innerText = Math.floor(gap / day);
+            document.getElementById("hours").innerText = Math.floor((gap % day) / hour);
+            document.getElementById("mins").innerText = Math.floor((gap % hour) / minute);
+        }
+        setInterval(updateCountdown, 1000);
+
+        // --- MAGAZINE NAVIGATION ---
+        function openMagazine() {
+            document.getElementById('magazine-view').style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Stop background scrolling
+        }
+
+        function closeMagazine() {
+            document.getElementById('magazine-view').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // --- SCROLL REVEAL ANIMATION ---
+        const observerOptions = { threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
