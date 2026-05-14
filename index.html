@@ -22,42 +22,54 @@
         }
 
         /* ─── HERO ─── */
-        .hero {
-            position: relative;
+        /*
+         * We use a sticky wrapper + absolute child instead of position:fixed
+         * because Chrome/Edge block fixed-position background-image on local
+         * file:// URLs (security sandbox). This approach works identically
+         * both locally and when hosted online.
+         */
+        .hero-sticky-wrap {
+            position: sticky;
+            top: 0;
             height: 100vh;
             width: 100%;
+            z-index: 0;
+            /* Negative margin pulls the next section up over this element */
+            margin-bottom: -100vh;
+        }
+
+        .hero {
+            position: absolute;
+            inset: 0;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
         }
 
-        /*
-         * FIX 1: background-image now uses proper url() syntax.
-         * FIX 2: The element is position:fixed so it stays full-screen while
-         *        the user scrolls — opacity is driven by JS scroll handler below.
-         * NOTE:  head.jpg must be in the SAME FOLDER as this HTML file.
-         *        If you host this online, replace 'head.jpg' with the full URL.
-         */
+        /* Single background-image declaration — no competing layers */
         .hero-img {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
+            position: absolute;
+            inset: 0;
+            /* Only ONE background-image so nothing competes */
             background-image: url('head.jpg');
-            background-position: center top;
+            background-position: center center;
             background-size: cover;
             background-repeat: no-repeat;
-            z-index: -1;
+            /* Warm fallback colour shown while the image loads or if it's missing */
+            background-color: #4a2c18;
             opacity: 1;
             transition: opacity 0.05s linear;
+            will-change: opacity;
+        }
 
-            /* Gorgeous fallback gradient shown when head.jpg is missing */
-            background-color: #2c1a0e;
-            background-image:
-                url('head.jpg'),
-                linear-gradient(160deg, #3b2012 0%, #7a4a2a 40%, #c5a059 100%);
+        /* Fallback gradient rendered as a separate layer BEHIND the photo via ::before */
+        .hero-img::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(160deg, #3b2012 0%, #7a4a2a 40%, #c5a059 100%);
+            z-index: -1;
         }
 
         /* Overlay so text always stays readable over the photo */
@@ -109,11 +121,14 @@
         }
 
         /* ─── MAIN CONTENT ─── */
-        /* Spacer so content starts below the hero */
+        /*
+         * The sticky hero wrapper already occupies 100vh in the flow,
+         * so content-wrapper needs NO extra margin-top — it naturally
+         * follows in document flow and slides up over the sticky hero.
+         */
         .content-wrapper {
             position: relative;
             z-index: 1;
-            margin-top: 100vh;
             background: var(--cream);
         }
 
@@ -339,18 +354,20 @@
 <body>
 
     <!-- ░░ HERO ░░ -->
-    <div class="hero">
-        <div class="hero-img" id="heroImg"></div>
-        <div class="hero-overlay"></div>
-        <div class="hero-text">
-            <p>A GLIMPSE OF OUR ENGAGEMENT</p>
-            <h1>Komal &amp; Amol</h1>
-            <p>Varanasi &nbsp;·&nbsp; April 20, 2026</p>
-            <div class="scroll-hint">↓ &nbsp; SCROLL</div>
+    <div class="hero-sticky-wrap">
+        <div class="hero">
+            <div class="hero-img" id="heroImg"></div>
+            <div class="hero-overlay"></div>
+            <div class="hero-text">
+                <p>A GLIMPSE OF OUR ENGAGEMENT</p>
+                <h1>Komal &amp; Amol</h1>
+                <p>Varanasi &nbsp;·&nbsp; April 20, 2026</p>
+                <div class="scroll-hint">↓ &nbsp; SCROLL</div>
+            </div>
         </div>
     </div>
 
-    <!-- ░░ CONTENT (sits on top after scroll) ░░ -->
+    <!-- ░░ CONTENT (slides up over the hero as you scroll) ░░ -->
     <div class="content-wrapper">
 
         <!-- Countdown & Magazine -->
@@ -480,16 +497,14 @@
         setInterval(updateCountdown, 1000);
 
         // ── HERO PARALLAX FADE-OUT ON SCROLL ──────────────────────────────────
-        // The hero image fades from opacity 1 → 0 as the user scrolls down
-        // through the first viewport height, creating a clean reveal of the
-        // cream content section beneath.
+        // The sticky wrapper keeps the hero pinned at top:0 while content scrolls
+        // over it. We fade the photo out over the first viewport-height of scroll.
         const heroImg = document.getElementById("heroImg");
 
         function handleHeroFade() {
-            const scrollY   = window.scrollY;
-            const fadeOver  = window.innerHeight; // complete fade by 100vh scroll
-            const opacity   = Math.max(0, 1 - scrollY / fadeOver);
-            heroImg.style.opacity = opacity;
+            // scrollY goes 0 → innerHeight as user scrolls through the hero zone
+            const progress = Math.min(window.scrollY / window.innerHeight, 1);
+            heroImg.style.opacity = 1 - progress;
         }
 
         window.addEventListener("scroll", handleHeroFade, { passive: true });
