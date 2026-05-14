@@ -21,72 +21,49 @@
             scroll-behavior: smooth;
         }
 
-        /* ─── HERO ─── */
-        /*
-         * We use a sticky wrapper + absolute child instead of position:fixed
-         * because Chrome/Edge block fixed-position background-image on local
-         * file:// URLs (security sandbox). This approach works identically
-         * both locally and when hosted online.
-         */
-        .hero-sticky-wrap {
-            position: sticky;
-            top: 0;
-            height: 100vh;
-            width: 100%;
-            z-index: 0;
-            /* Negative margin pulls the next section up over this element */
-            margin-bottom: -100vh;
-        }
-
-        .hero {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        /* Single background-image declaration — no competing layers */
-        .hero-img {
-            position: absolute;
-            inset: 0;
-            /* Only ONE background-image so nothing competes */
+        /* ─── HERO BACKGROUND (fixed, fades on scroll) ─── */
+        /* Fixed works fine now because the image is served over HTTPS from GitHub */
+        #hero-bg {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100vh;
             background-image: url('https://raw.githubusercontent.com/k852-psudo/engagement_20/8653d467610cd95a0552d26f4c69ed0883c29a0e/head.JPG');
-            background-position: center center;
             background-size: cover;
+            background-position: center center;
             background-repeat: no-repeat;
-            /* Warm fallback colour shown while the image loads or if it's missing */
             background-color: #4a2c18;
-            opacity: 1;
-            transition: opacity 0.05s linear;
+            z-index: 0;
             will-change: opacity;
         }
 
-        /* Fallback gradient rendered as a separate layer BEHIND the photo via ::before */
-        .hero-img::before {
+        /* Dark overlay for text legibility */
+        #hero-bg::after {
             content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(160deg, #3b2012 0%, #7a4a2a 40%, #c5a059 100%);
-            z-index: -1;
-        }
-
-        /* Overlay so text always stays readable over the photo */
-        .hero-overlay {
             position: absolute;
             inset: 0;
             background: linear-gradient(
                 to bottom,
-                rgba(0,0,0,0.35) 0%,
-                rgba(0,0,0,0.15) 60%,
-                rgba(0,0,0,0.55) 100%
+                rgba(0,0,0,0.3) 0%,
+                rgba(0,0,0,0.1) 50%,
+                rgba(0,0,0,0.5) 100%
             );
+        }
+
+        /* ─── HERO SPACER + TEXT ─── */
+        /* This sits in normal flow, giving the page 100vh of scroll space
+           before the cream content begins. The fixed #hero-bg shows through it. */
+        .hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
         }
 
         .hero-text {
             position: relative;
-            z-index: 1;
+            z-index: 2;
             text-align: center;
             color: white;
             text-shadow: 1px 2px 12px rgba(0,0,0,0.6);
@@ -121,14 +98,10 @@
         }
 
         /* ─── MAIN CONTENT ─── */
-        /*
-         * The sticky hero wrapper already occupies 100vh in the flow,
-         * so content-wrapper needs NO extra margin-top — it naturally
-         * follows in document flow and slides up over the sticky hero.
-         */
+        /* Sits in normal flow below the hero spacer, covers the fixed bg as user scrolls */
         .content-wrapper {
             position: relative;
-            z-index: 1;
+            z-index: 2;
             background: var(--cream);
         }
 
@@ -196,7 +169,7 @@
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: #111;
+            background: var(--cream);
             z-index: 100;
             overflow: hidden;
         }
@@ -227,7 +200,7 @@
             max-width: 90%;
             max-height: 80vh;
             object-fit: contain;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
             border: 12px solid white;
         }
 
@@ -260,30 +233,30 @@
         }
 
         .page-number {
-            color: rgba(255,255,255,0.4);
+            color: var(--gold);
             font-size: 0.75rem;
             letter-spacing: 0.2em;
             margin-top: 12px;
+            font-family: 'Playfair Display', serif;
         }
 
         .close-mag {
             position: fixed;
             top: 20px;
             left: 20px;
-            background: rgba(255,255,255,0.15);
-            backdrop-filter: blur(6px);
+            background: var(--dark);
             color: white;
             padding: 10px 22px;
             cursor: pointer;
             z-index: 101;
-            border: 1px solid rgba(255,255,255,0.25);
+            border: none;
             font-family: 'Montserrat', sans-serif;
             font-size: 0.85rem;
             letter-spacing: 0.1em;
             transition: background 0.2s;
         }
 
-        .close-mag:hover { background: rgba(255,255,255,0.28); }
+        .close-mag:hover { background: #333; }
 
         /* ─── FAMILY SECTION ─── */
         .family-grid {
@@ -353,21 +326,20 @@
 </head>
 <body>
 
-    <!-- ░░ HERO ░░ -->
-    <div class="hero-sticky-wrap">
-        <div class="hero">
-            <div class="hero-img" id="heroImg"></div>
-            <div class="hero-overlay"></div>
-            <div class="hero-text">
-                <p>A GLIMPSE OF OUR ENGAGEMENT</p>
-                <h1>Komal &amp; Amol</h1>
-                <p>Varanasi &nbsp;·&nbsp; April 20, 2026</p>
-                <div class="scroll-hint">↓ &nbsp; SCROLL</div>
-            </div>
+    <!-- Fixed background image — fades as user scrolls -->
+    <div id="hero-bg"></div>
+
+    <!-- Hero spacer: 100vh tall, transparent, text sits here -->
+    <div class="hero">
+        <div class="hero-text">
+            <p>A GLIMPSE OF OUR ENGAGEMENT</p>
+            <h1>Komal &amp; Amol</h1>
+            <p>Varanasi &nbsp;·&nbsp; April 20, 2026</p>
+            <div class="scroll-hint">↓ &nbsp; SCROLL</div>
         </div>
     </div>
 
-    <!-- ░░ CONTENT (slides up over the hero as you scroll) ░░ -->
+    <!-- Content slides up over the fading hero as user scrolls -->
     <div class="content-wrapper">
 
         <!-- Countdown & Magazine -->
@@ -500,15 +472,15 @@
         updateCountdown();
         setInterval(updateCountdown, 1000);
 
-        // ── HERO PARALLAX FADE-OUT ON SCROLL ──────────────────────────────────
-        // The sticky wrapper keeps the hero pinned at top:0 while content scrolls
-        // over it. We fade the photo out over the first viewport-height of scroll.
-        const heroImg = document.getElementById("heroImg");
+        // ── HERO FADE ON SCROLL ────────────────────────────────────────────────
+        // #hero-bg is position:fixed — it fades from opacity 1 → 0 as the user
+        // scrolls through the first viewport height. The cream content-wrapper
+        // then covers it naturally as it scrolls into view.
+        const heroBg = document.getElementById("hero-bg");
 
         function handleHeroFade() {
-            // scrollY goes 0 → innerHeight as user scrolls through the hero zone
             const progress = Math.min(window.scrollY / window.innerHeight, 1);
-            heroImg.style.opacity = 1 - progress;
+            heroBg.style.opacity = 1 - progress;
         }
 
         window.addEventListener("scroll", handleHeroFade, { passive: true });
