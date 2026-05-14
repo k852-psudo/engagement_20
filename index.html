@@ -12,107 +12,131 @@
             --cream: #fdfbf7;
         }
 
-        body, html {
+        *, *::before, *::after { box-sizing: border-box; }
+
+        /* NO scroll-behavior on html — it causes browsers to
+           auto-scroll to anchor fragments on load */
+        html, body {
             margin: 0;
             padding: 0;
-            font-family: 'Montserrat', sans-serif;
-            background-color: var(--cream);
-            color: var(--dark);
-            scroll-behavior: smooth;
+            overflow-x: hidden;
         }
 
-        /* ─── HERO BACKGROUND (fixed, fades on scroll) ─── */
-        /* Fixed works fine now because the image is served over HTTPS from GitHub */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--cream);
+            color: var(--dark);
+        }
+
+        /* ════════════════════════════════
+           HERO PHOTO — fixed behind everything
+           z-index: 1 (lowest)
+        ════════════════════════════════ */
         #hero-bg {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100vh;
+            inset: 0;
+            z-index: 1;
+            background-color: #4a2c18; /* warm fallback while photo loads */
             background-image: url('https://raw.githubusercontent.com/k852-psudo/engagement_20/8653d467610cd95a0552d26f4c69ed0883c29a0e/head.JPG');
             background-size: cover;
             background-position: center center;
             background-repeat: no-repeat;
-            background-color: #4a2c18;
-            z-index: 0;
             will-change: opacity;
         }
 
-        /* Dark overlay for text legibility */
+        /* Gradient overlay on top of the photo */
         #hero-bg::after {
             content: '';
             position: absolute;
             inset: 0;
             background: linear-gradient(
                 to bottom,
-                rgba(0,0,0,0.3) 0%,
-                rgba(0,0,0,0.1) 50%,
-                rgba(0,0,0,0.5) 100%
+                rgba(0,0,0,0.22) 0%,
+                rgba(0,0,0,0.04) 45%,
+                rgba(0,0,0,0.42) 100%
             );
         }
 
-        /* ─── HERO SPACER + TEXT ─── */
-        /* This sits in normal flow, giving the page 100vh of scroll space
-           before the cream content begins. The fixed #hero-bg shows through it. */
-        .hero {
+        /* ════════════════════════════════
+           HERO SECTION — normal flow, transparent
+           100vh tall so page starts here.
+           z-index: 2 (above hero-bg)
+        ════════════════════════════════ */
+        #hero {
             position: relative;
+            z-index: 2;
             height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1;
+            /* background is intentionally transparent so #hero-bg shows */
         }
 
         .hero-text {
-            position: relative;
-            z-index: 2;
             text-align: center;
             color: white;
-            text-shadow: 1px 2px 12px rgba(0,0,0,0.6);
-            padding: 0 20px;
+            text-shadow: 1px 2px 14px rgba(0,0,0,0.7);
+            padding: 0 24px;
+            user-select: none;
         }
 
-        .hero-text p {
-            letter-spacing: 0.3em;
-            font-size: 0.85rem;
-            margin: 0 0 16px;
+        .eyebrow {
+            letter-spacing: 0.35em;
+            font-size: 0.76rem;
+            font-weight: 400;
+            text-transform: uppercase;
+            margin: 0 0 22px;
             opacity: 0.9;
         }
 
         .hero-text h1 {
             font-family: 'Playfair Display', serif;
-            font-size: clamp(2.8rem, 8vw, 5rem);
-            margin: 0 0 16px;
             font-style: italic;
+            font-size: clamp(3rem, 9vw, 5.5rem);
+            margin: 0 0 20px;
+            line-height: 1.1;
+        }
+
+        .subline {
+            letter-spacing: 0.22em;
+            font-size: 0.8rem;
+            margin: 0;
+            opacity: 0.85;
         }
 
         .scroll-hint {
-            margin-top: 40px;
-            font-size: 0.75rem;
-            letter-spacing: 0.25em;
-            opacity: 0.7;
-            animation: bounce 2s infinite;
+            display: inline-block;
+            margin-top: 50px;
+            font-size: 0.7rem;
+            letter-spacing: 0.3em;
+            opacity: 0.6;
+            animation: nudge 2s ease-in-out infinite;
         }
 
-        @keyframes bounce {
+        @keyframes nudge {
             0%, 100% { transform: translateY(0); }
-            50%       { transform: translateY(8px); }
+            50%       { transform: translateY(7px); }
         }
 
-        /* ─── MAIN CONTENT ─── */
-        /* Sits in normal flow below the hero spacer, covers the fixed bg as user scrolls */
-        .content-wrapper {
+        /* ════════════════════════════════
+           CONTENT — cream bg, z-index: 3
+           Slides up over the hero photo
+           as the user scrolls down.
+        ════════════════════════════════ */
+        #content {
             position: relative;
-            z-index: 2;
+            z-index: 3;
             background: var(--cream);
         }
 
         section {
-            padding: 80px 20px;
+            padding: 90px 20px;
             max-width: 1000px;
-            margin: auto;
+            margin: 0 auto;
             text-align: center;
             opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            transform: translateY(26px);
+            transition: opacity 0.75s ease-out, transform 0.75s ease-out;
         }
 
         section.visible {
@@ -120,156 +144,90 @@
             transform: translateY(0);
         }
 
-        /* ─── COUNTDOWN ─── */
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.9rem, 4vw, 2.5rem);
+            margin: 0 0 10px;
+        }
+
+        .gold-divider {
+            width: 50px;
+            height: 2px;
+            background: var(--gold);
+            margin: 16px auto 32px;
+        }
+
+        .section-note {
+            font-size: 0.88rem;
+            color: #999;
+            letter-spacing: 0.06em;
+            margin: 0 0 36px;
+        }
+
+        /* ── COUNTDOWN ── */
         #countdown {
             display: flex;
             justify-content: center;
-            gap: 20px;
-            font-size: 1.5rem;
-            margin-top: 20px;
+            gap: 14px;
             flex-wrap: wrap;
+            margin-bottom: 48px;
         }
 
         .count-box {
             background: white;
-            padding: 15px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            padding: 18px 20px 14px;
+            border-radius: 6px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.07);
             min-width: 80px;
+            text-align: center;
         }
 
         .count-box span {
             font-family: 'Playfair Display', serif;
-            font-size: 2rem;
+            font-size: 2.1rem;
             color: var(--gold);
+            display: block;
+            line-height: 1;
         }
 
-        /* ─── MAGAZINE BUTTON ─── */
-        .magazine-btn {
+        .count-box small {
+            display: block;
+            margin-top: 7px;
+            font-size: 0.68rem;
+            letter-spacing: 0.15em;
+            color: #bbb;
+            text-transform: uppercase;
+        }
+
+        /* ── MAGAZINE BUTTON ── */
+        .mag-btn {
             background: var(--gold);
             color: white;
-            padding: 15px 40px;
             border: none;
+            padding: 15px 46px;
             font-family: 'Playfair Display', serif;
-            font-size: 1.2rem;
+            font-size: 1.12rem;
+            letter-spacing: 0.06em;
             cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
-            margin-top: 40px;
-            letter-spacing: 0.05em;
+            transition: background 0.25s, transform 0.18s;
         }
 
-        .magazine-btn:hover {
+        .mag-btn:hover {
             background: #b08d4a;
             transform: translateY(-2px);
         }
 
-        /* ─── MAGAZINE VIEW ─── */
-        #magazine-view {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: var(--cream);
-            z-index: 100;
-            overflow: hidden;
-        }
-
-        .magazine-container {
-            display: flex;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            height: 100vh;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .magazine-container::-webkit-scrollbar { display: none; }
-
-        .magazine-page {
-            min-width: 100vw;
-            height: 100vh;
-            scroll-snap-align: start;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .magazine-page img {
-            max-width: 90%;
-            max-height: 80vh;
-            object-fit: contain;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
-            border: 12px solid white;
-        }
-
-        .magazine-page.cover {
-            background: var(--cream);
-            text-align: center;
-            gap: 10px;
-        }
-
-        .magazine-page.cover h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2rem, 6vw, 3.5rem);
-            color: var(--dark);
-            margin: 0;
-        }
-
-        .magazine-page.cover p {
-            color: var(--gold);
-            letter-spacing: 0.2em;
-            font-size: 0.9rem;
-        }
-
-        .magazine-page.cover small {
-            color: #999;
-            font-size: 0.75rem;
-            letter-spacing: 0.15em;
-            animation: bounce 2s infinite;
-            display: block;
-            margin-top: 20px;
-        }
-
-        .page-number {
-            color: var(--gold);
-            font-size: 0.75rem;
-            letter-spacing: 0.2em;
-            margin-top: 12px;
-            font-family: 'Playfair Display', serif;
-        }
-
-        .close-mag {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: var(--dark);
-            color: white;
-            padding: 10px 22px;
-            cursor: pointer;
-            z-index: 101;
-            border: none;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.85rem;
-            letter-spacing: 0.1em;
-            transition: background 0.2s;
-        }
-
-        .close-mag:hover { background: #333; }
-
-        /* ─── FAMILY SECTION ─── */
+        /* ── FAMILY ── */
         .family-grid {
             display: flex;
-            justify-content: space-around;
+            justify-content: center;
+            gap: 28px;
             flex-wrap: wrap;
-            gap: 30px;
-            margin-top: 30px;
         }
 
         .family-card {
             background: white;
-            padding: 30px 40px;
+            padding: 30px 44px;
             border-top: 3px solid var(--gold);
             box-shadow: 0 4px 20px rgba(0,0,0,0.05);
             min-width: 200px;
@@ -278,86 +236,179 @@
         .family-card h3 {
             font-family: 'Playfair Display', serif;
             color: var(--gold);
-            margin: 0 0 10px;
+            font-size: 1.15rem;
+            margin: 0 0 8px;
         }
 
-        /* ─── INVITATION CARD ─── */
-        .card-preview {
+        .family-card p { color: #888; font-size: 0.88rem; margin: 0; }
+
+        /* ── INVITATION ── */
+        .invite-card {
             background: white;
-            padding: 50px 40px;
+            padding: 50px 44px;
             border: 2px solid var(--gold);
-            max-width: 480px;
-            margin: 40px auto 0;
+            max-width: 440px;
+            margin: 0 auto;
             font-family: 'Playfair Display', serif;
             box-shadow: 0 8px 30px rgba(0,0,0,0.07);
         }
 
-        .card-preview h3 {
-            font-size: 2rem;
+        .invite-card h3 {
+            font-size: 1.9rem;
             color: var(--gold);
-            margin: 0 0 10px;
             font-style: italic;
+            margin: 0;
         }
 
-        .card-preview p {
+        .invite-card p {
             margin: 8px 0;
-            color: #555;
-            font-size: 1rem;
+            color: #666;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.93rem;
         }
 
-        .card-preview strong {
-            color: var(--dark);
-            font-size: 1.1rem;
+        .invite-card strong { color: var(--dark); font-weight: 500; }
+
+        /* ════════════════════════════════
+           MAGAZINE OVERLAY
+        ════════════════════════════════ */
+        #magazine {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 400;
+            background: var(--cream);
+            overflow: hidden;
         }
 
-        .gold-divider {
-            width: 60px;
-            height: 2px;
-            background: var(--gold);
-            margin: 20px auto;
+        /* Horizontal swipe strip */
+        .mag-strip {
+            display: flex;
+            height: 100vh;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
         }
 
-        h2 {
+        .mag-strip::-webkit-scrollbar { display: none; }
+
+        /* Each page */
+        .mag-page {
+            flex: 0 0 100vw;
+            height: 100vh;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 64px 24px 24px; /* 64px top clears the Back button */
+        }
+
+        /* Cover page */
+        .mag-page.cover { gap: 4px; }
+
+        .mag-page.cover h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+            font-size: clamp(2rem, 5vw, 3rem);
+            color: var(--dark);
+            margin: 0;
+            text-align: center;
+            line-height: 1.25;
         }
+
+        .mag-page.cover h1 em { color: var(--gold); font-style: italic; }
+
+        .cover-sub {
+            font-size: 0.76rem;
+            letter-spacing: 0.26em;
+            color: #aaa;
+            text-transform: uppercase;
+            margin-top: 6px;
+        }
+
+        .swipe-hint {
+            display: block;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            color: #ccc;
+            margin-top: 26px;
+            animation: nudge 2s ease-in-out infinite;
+        }
+
+        /* Photo pages */
+        .mag-page img {
+            max-width: 92%;
+            max-height: 76vh;
+            object-fit: contain;
+            border: 10px solid white;
+            box-shadow: 0 6px 26px rgba(0,0,0,0.12);
+            display: block;
+        }
+
+        .page-num {
+            margin-top: 14px;
+            font-family: 'Playfair Display', serif;
+            font-size: 0.76rem;
+            letter-spacing: 0.22em;
+            color: var(--gold);
+        }
+
+        /* Back button */
+        #mag-back {
+            position: fixed;
+            top: 18px;
+            left: 18px;
+            z-index: 401;
+            background: var(--dark);
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            letter-spacing: 0.12em;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        #mag-back:hover { background: #333; }
     </style>
 </head>
 <body>
 
-    <!-- Fixed background image — fades as user scrolls -->
+    <!-- ══ FIXED HERO PHOTO ══ -->
     <div id="hero-bg"></div>
 
-    <!-- Hero spacer: 100vh tall, transparent, text sits here -->
-    <div class="hero">
+    <!-- ══ HERO — normal flow, 100vh, transparent bg ══ -->
+    <div id="hero">
         <div class="hero-text">
-            <p>A GLIMPSE OF OUR ENGAGEMENT</p>
+            <p class="eyebrow">A Glimpse of Our Engagement</p>
             <h1>Komal &amp; Amol</h1>
-            <p>Varanasi &nbsp;·&nbsp; April 20, 2026</p>
-            <div class="scroll-hint">↓ &nbsp; SCROLL</div>
+            <p class="subline">Varanasi &nbsp;·&nbsp; April 20, 2026</p>
+            <span class="scroll-hint">↓ &nbsp; S C R O L L</span>
         </div>
     </div>
 
-    <!-- Content slides up over the fading hero as user scrolls -->
-    <div class="content-wrapper">
+    <!-- ══ CREAM CONTENT — slides over hero on scroll ══ -->
+    <div id="content">
 
-        <!-- Countdown & Magazine -->
-        <section id="welcome">
+        <section id="sec-count">
             <h2>Counting Down to the Big Day</h2>
+            <div class="gold-divider"></div>
             <div id="countdown">
-                <div class="count-box"><span id="days">00</span><br><small>Days</small></div>
-                <div class="count-box"><span id="hours">00</span><br><small>Hours</small></div>
-                <div class="count-box"><span id="mins">00</span><br><small>Mins</small></div>
-                <div class="count-box"><span id="secs">00</span><br><small>Secs</small></div>
+                <div class="count-box"><span id="cd-d">00</span><small>Days</small></div>
+                <div class="count-box"><span id="cd-h">00</span><small>Hours</small></div>
+                <div class="count-box"><span id="cd-m">00</span><small>Mins</small></div>
+                <div class="count-box"><span id="cd-s">00</span><small>Secs</small></div>
             </div>
-            <button class="magazine-btn" onclick="openMagazine()">Open Engagement Magazine</button>
+            <button class="mag-btn" onclick="openMag()">Open Engagement Magazine</button>
         </section>
 
-        <!-- Family -->
-        <section id="family">
+        <section id="sec-family">
             <h2>The Families</h2>
-            <p>Grateful for the love and blessings of the Raj and Srivastava families.</p>
+            <div class="gold-divider"></div>
+            <p class="section-note">Grateful for the love and blessings of the Raj and Srivastava families.</p>
             <div class="family-grid">
                 <div class="family-card">
                     <h3>Team Bride</h3>
@@ -370,10 +421,10 @@
             </div>
         </section>
 
-        <!-- Invitation -->
-        <section id="invitation">
+        <section id="sec-invite">
             <h2>The Invitation</h2>
-            <div class="card-preview">
+            <div class="gold-divider"></div>
+            <div class="invite-card">
                 <h3>Komal &amp; Amol</h3>
                 <div class="gold-divider"></div>
                 <p>Invite you to join their wedding celebration</p>
@@ -382,126 +433,140 @@
             </div>
         </section>
 
-    </div><!-- end .content-wrapper -->
+    </div><!-- /#content -->
 
 
-    <!-- ░░ MAGAZINE ░░ -->
-    <div id="magazine-view">
-        <button class="close-mag" onclick="closeMagazine()">← Back</button>
+    <!-- ══ MAGAZINE OVERLAY ══ -->
+    <div id="magazine">
+        <button id="mag-back" onclick="closeMag()">← Back</button>
 
-        <div class="magazine-container">
+        <div class="mag-strip" id="mag-strip">
 
             <!-- Cover -->
-            <div class="magazine-page cover">
-                <h1>THE ENGAGEMENT<br><em>ISSUE</em></h1>
+            <div class="mag-page cover">
+                <h1>The Engagement<br><em>Issue</em></h1>
                 <div class="gold-divider"></div>
-                <p>KOMAL &amp; AMOL &nbsp;·&nbsp; APRIL 2026</p>
-                <small>SWIPE TO FLIP →</small>
+                <p class="cover-sub">Komal &amp; Amol &nbsp;·&nbsp; April 2026</p>
+                <span class="swipe-hint">Swipe to flip →</span>
             </div>
 
-            <!--
-                FIX 3: Google Drive "uc?export=view" links are blocked by Google's
-                newer CORS / redirect policy. We switch to the "thumbnail" endpoint
-                which serves images publicly without requiring sign-in.
-                Format: https://drive.google.com/thumbnail?id=FILE_ID&sz=w1200
-            -->
-            <div class="magazine-page">
-                <img src="https://drive.google.com/thumbnail?id=1QZ0Bm02dNqj2JOSn9LgagicApeWP09Yc&sz=w1200" alt="Engagement photo 1">
-                <span class="page-number">01</span>
+            <div class="mag-page">
+                <img src="https://drive.google.com/thumbnail?id=1QZ0Bm02dNqj2JOSn9LgagicApeWP09Yc&sz=w1200" alt="Photo 1">
+                <span class="page-num">01</span>
             </div>
-            <div class="magazine-page">
-                <img src="https://drive.google.com/thumbnail?id=10TCvtN-Xup5KeIErcvxMtsXZT2qwnArO&sz=w1200" alt="Engagement photo 2">
-                <span class="page-number">02</span>
+            <div class="mag-page">
+                <img src="https://drive.google.com/thumbnail?id=10TCvtN-Xup5KeIErcvxMtsXZT2qwnArO&sz=w1200" alt="Photo 2">
+                <span class="page-num">02</span>
             </div>
-            <div class="magazine-page">
-                <img src="https://drive.google.com/thumbnail?id=1pji04p4LGtSyT9cF62ocqtO6Koy80kvw&sz=w1200" alt="Engagement photo 3">
-                <span class="page-number">03</span>
+            <div class="mag-page">
+                <img src="https://drive.google.com/thumbnail?id=1pji04p4LGtSyT9cF62ocqtO6Koy80kvw&sz=w1200" alt="Photo 3">
+                <span class="page-num">03</span>
             </div>
-            <div class="magazine-page">
-                <img src="https://drive.google.com/thumbnail?id=17J5i3tky8Bn8tap_AjCjbAXvP5oJ5jgQ&sz=w1200" alt="Engagement photo 4">
-                <span class="page-number">04</span>
+            <div class="mag-page">
+                <img src="https://drive.google.com/thumbnail?id=17J5i3tky8Bn8tap_AjCjbAXvP5oJ5jgQ&sz=w1200" alt="Photo 4">
+                <span class="page-num">04</span>
             </div>
-            <div class="magazine-page">
-                <img src="https://drive.google.com/thumbnail?id=1UWnRGeoyxZKMmgCLsdKHxvaGhHfVpBH3&sz=w1200" alt="Engagement photo 5">
-                <span class="page-number">05</span>
+            <div class="mag-page">
+                <img src="https://drive.google.com/thumbnail?id=1UWnRGeoyxZKMmgCLsdKHxvaGhHfVpBH3&sz=w1200" alt="Photo 5">
+                <span class="page-num">05</span>
             </div>
-            <div class="magazine-page">
-                <img src="https://drive.google.com/thumbnail?id=1yV0nIKIG8bu0-ZIDLYwxGfzgPIFesSvD&sz=w1200" alt="Engagement photo 6">
-                <span class="page-number">06</span>
+            <div class="mag-page">
+                <img src="https://drive.google.com/thumbnail?id=1yV0nIKIG8bu0-ZIDLYwxGfzgPIFesSvD&sz=w1200" alt="Photo 6">
+                <span class="page-num">06</span>
             </div>
-            <div class="magazine-page">
-                <img src="https://drive.google.com/thumbnail?id=1ts4snN7q6gmz9rMdD0aS0YtqKm6CdSP3&sz=w1200" alt="Engagement photo 7">
-                <span class="page-number">07</span>
+            <div class="mag-page">
+                <img src="https://drive.google.com/thumbnail?id=1ts4snN7q6gmz9rMdD0aS0YtqKm6CdSP3&sz=w1200" alt="Photo 7">
+                <span class="page-num">07</span>
             </div>
-            <div class="magazine-page">
-                <img src="https://drive.google.com/thumbnail?id=1vkfIEUdWICuIuddqnIxQszvxtBTtzXwW&sz=w1200" alt="Engagement photo 8">
-                <span class="page-number">08</span>
+            <div class="mag-page">
+                <img src="https://drive.google.com/thumbnail?id=1vkfIEUdWICuIuddqnIxQszvxtBTtzXwW&sz=w1200" alt="Photo 8">
+                <span class="page-num">08</span>
             </div>
-            <div class="magazine-page">
-                <img src="https://drive.google.com/thumbnail?id=144wLvBXjbt-Er3C3XE5JT79inIy26WyZ&sz=w1200" alt="Engagement photo 9">
-                <span class="page-number">09</span>
+            <div class="mag-page">
+                <img src="https://drive.google.com/thumbnail?id=144wLvBXjbt-Er3C3XE5JT79inIy26WyZ&sz=w1200" alt="Photo 9">
+                <span class="page-num">09</span>
             </div>
-            <div class="magazine-page">
-                <img src="https://drive.google.com/thumbnail?id=1-YWsCOLTSsu2SIgfbjqLFoe-ulCV72aJ&sz=w1200" alt="Engagement photo 10">
-                <span class="page-number">10</span>
+            <div class="mag-page">
+                <img src="https://drive.google.com/thumbnail?id=1-YWsCOLTSsu2SIgfbjqLFoe-ulCV72aJ&sz=w1200" alt="Photo 10">
+                <span class="page-num">10</span>
             </div>
-            <div class="magazine-page">
-                <img src="https://drive.google.com/thumbnail?id=1uC--m7YWIh87tMGgDxj650DjmnA0sJxY&sz=w1200" alt="Engagement photo 11">
-                <span class="page-number">11</span>
+            <div class="mag-page">
+                <img src="https://drive.google.com/thumbnail?id=1uC--m7YWIh87tMGgDxj650DjmnA0sJxY&sz=w1200" alt="Photo 11">
+                <span class="page-num">11</span>
             </div>
 
         </div>
-    </div><!-- end #magazine-view -->
+    </div><!-- /#magazine -->
 
 
     <script>
-        // ── COUNTDOWN ──────────────────────────────────────────────────────────
-        const weddingDate = new Date("December 3, 2026 00:00:00").getTime();
+        /* ── 1. COUNTDOWN ─────────────────────────────────────────────── */
+        const WEDDING = new Date("December 3, 2026 00:00:00").getTime();
 
-        function updateCountdown() {
-            const gap = weddingDate - Date.now();
-            const d = Math.floor(gap / 86400000);
-            const h = Math.floor((gap % 86400000) / 3600000);
-            const m = Math.floor((gap % 3600000) / 60000);
-            const s = Math.floor((gap % 60000) / 1000);
-            document.getElementById("days").textContent  = String(d).padStart(2,"0");
-            document.getElementById("hours").textContent = String(h).padStart(2,"0");
-            document.getElementById("mins").textContent  = String(m).padStart(2,"0");
-            document.getElementById("secs").textContent  = String(s).padStart(2,"0");
+        function tick() {
+            const diff = WEDDING - Date.now();
+            if (diff < 0) return;
+            const pad = n => String(Math.floor(n)).padStart(2, "0");
+            document.getElementById("cd-d").textContent = pad(diff / 86400000);
+            document.getElementById("cd-h").textContent = pad((diff % 86400000) / 3600000);
+            document.getElementById("cd-m").textContent = pad((diff % 3600000)  / 60000);
+            document.getElementById("cd-s").textContent = pad((diff % 60000)    / 1000);
         }
-        updateCountdown();
-        setInterval(updateCountdown, 1000);
+        tick();
+        setInterval(tick, 1000);
 
-        // ── HERO FADE ON SCROLL ────────────────────────────────────────────────
-        // #hero-bg is position:fixed — it fades from opacity 1 → 0 as the user
-        // scrolls through the first viewport height. The cream content-wrapper
-        // then covers it naturally as it scrolls into view.
+        /* ── 2. HERO FADE ─────────────────────────────────────────────── */
+        /*
+         * #hero-bg is position:fixed at z-index:1.
+         * #content is position:relative at z-index:3 with background:cream.
+         *
+         * As the user scrolls, two things happen:
+         *   a) #content naturally slides up and covers #hero-bg (z-index layering)
+         *   b) We also fade #hero-bg opacity for a smooth dissolve effect.
+         *
+         * We start the fade at scrollY=0 so opacity is always 1 on load.
+         * The fade completes by 60% of the viewport height for a snappy feel.
+         */
         const heroBg = document.getElementById("hero-bg");
+        let rafPending = false;
 
-        function handleHeroFade() {
-            const progress = Math.min(window.scrollY / window.innerHeight, 1);
-            heroBg.style.opacity = 1 - progress;
+        function updateFade() {
+            const fade = Math.max(0, 1 - window.scrollY / (window.innerHeight * 0.6));
+            heroBg.style.opacity = fade;
+            rafPending = false;
         }
 
-        window.addEventListener("scroll", handleHeroFade, { passive: true });
+        window.addEventListener("scroll", function () {
+            if (!rafPending) {
+                rafPending = true;
+                requestAnimationFrame(updateFade);
+            }
+        }, { passive: true });
 
-        // ── MAGAZINE ──────────────────────────────────────────────────────────
-        function openMagazine() {
-            document.getElementById("magazine-view").style.display = "block";
+        /* ── 3. MAGAZINE ──────────────────────────────────────────────── */
+        function openMag() {
+            // Always reset to the cover page when opening
+            document.getElementById("mag-strip").scrollLeft = 0;
+            document.getElementById("magazine").style.display = "block";
             document.body.style.overflow = "hidden";
         }
 
-        function closeMagazine() {
-            document.getElementById("magazine-view").style.display = "none";
-            document.body.style.overflow = "auto";
+        function closeMag() {
+            document.getElementById("magazine").style.display = "none";
+            document.body.style.overflow = "";
         }
 
-        // ── SCROLL-REVEAL FOR SECTIONS ─────────────────────────────────────────
-        const observer = new IntersectionObserver(
-            entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("visible"); }),
-            { threshold: 0.1 }
-        );
-        document.querySelectorAll("section").forEach(s => observer.observe(s));
+        /* ── 4. SCROLL REVEAL ─────────────────────────────────────────── */
+        const io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+                if (e.isIntersecting) {
+                    e.target.classList.add("visible");
+                    io.unobserve(e.target); // only trigger once
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll("section").forEach(function (s) { io.observe(s); });
     </script>
 </body>
 </html>
